@@ -51,7 +51,6 @@ export function useFolder(folderId = null, folder = null) {
           type: ACTIONS.UPDATE_FOLDER,
           payload: { folder: database.formattedDoc(doc) },
         });
-        console.log(database.formattedDoc);
       })
       .catch(() =>
         dispatch({
