@@ -14,7 +14,7 @@ export default function Dashboard() {
 
       <Container fluid>
         <AddFolderButton currentFolder={folder} />
-        <Folder folder={folder}></Folder>
+        {folder && <Folder folder={folder}></Folder>}
       </Container>
     </>
   );
