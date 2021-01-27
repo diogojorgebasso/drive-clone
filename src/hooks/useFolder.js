@@ -24,7 +24,7 @@ function reducer(state, { type, payload }) {
       return state;
   }
 }
-export default function useFolder(folderId = null, folder = null) {
+export function useFolder(folderId = null, folder = null) {
   const [state, dispatch] = useReducer(reducer, {
     folderId,
     folder,
