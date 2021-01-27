@@ -17,6 +17,7 @@ const firestore = app.firestore();
 export const database = {
   folders: firestore.collection("folders"),
   files: firestore.collection("files"),
+  getTime: firebase.firestore.FieldValue.serverTimestamp,
 };
 
 export default app;
