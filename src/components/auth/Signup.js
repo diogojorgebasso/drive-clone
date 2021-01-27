@@ -7,7 +7,6 @@ import CenteredContainer from "./CenteredContainer";
 export default function Signup() {
   const emailRef = useRef();
   const passwordRef = useRef();
-  const passwordConfirmRef = useRef();
   const { signup } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -15,10 +14,6 @@ export default function Signup() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-
-    if (passwordRef.current.value !== passwordConfirmRef.current.value) {
-      return setError("Passwords do not match");
-    }
 
     try {
       setError("");
@@ -47,10 +42,7 @@ export default function Signup() {
               <Form.Label>Password</Form.Label>
               <Form.Control type="password" ref={passwordRef} required />
             </Form.Group>
-            <Form.Group id="password-confirm">
-              <Form.Label>Password Confirmation</Form.Label>
-              <Form.Control type="password" ref={passwordConfirmRef} required />
-            </Form.Group>
+
             <Button disabled={loading} className="w-100" type="submit">
               Sign Up
             </Button>
