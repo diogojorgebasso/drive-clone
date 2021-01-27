@@ -18,9 +18,10 @@ export default function AddFolderButton({ currentFolder }) {
   }
   function handleFolder(event) {
     event.preventDefault();
+    if (currentFolder == null) return;
     database.folders.add({
       name,
-      //parentId,
+      parentId: currentFolder.id,
       userId: currentUser.uid,
       //path,
       timeStamp: database.getTime(),
