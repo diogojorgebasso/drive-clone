@@ -71,7 +71,7 @@ export function useFolder(folderId = null, folder = null) {
         });
       })
       .catch((err) => {
-        console.warn(err);
+        console.warn(err); //TODO: add react tostify
         dispatch({
           type: ACTIONS.UPDATE_FOLDER,
           payload: { folder: ROOT_FOLDER },
