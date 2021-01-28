@@ -21,14 +21,14 @@ function reducer(state, { type, payload }) {
         folderId: payload.folderId,
         folder: payload.folder,
         childFiles: [],
-        childFolder: [],
+        childFolders: [],
       };
 
     case ACTIONS.UPDATE_FOLDER:
       return { ...state, folder: payload.folder };
 
     case ACTIONS.SET_CHILD_FOLDERS:
-      return { ...state, childFolders: payload.childFolder };
+      return { ...state, childFolders: payload.childFolders };
 
     default:
       return state;
