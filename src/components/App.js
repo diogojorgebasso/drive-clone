@@ -16,6 +16,7 @@ export default function App() {
         <Switch>
           {/*Drive */}
           <PrivateRoute exact path="/" component={Dashboard} />
+          <PrivateRoute exact path="/folder/:folderId" component={Dashboard} />
 
           {/*User */}
           <PrivateRoute path="/user" component={Profile} />
