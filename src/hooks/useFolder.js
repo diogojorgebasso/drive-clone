@@ -38,18 +38,24 @@ export function useFolder(folderId = null, folder = null) {
   const [state, dispatch] = useReducer(reducer, {
     folderId,
     folder,
-    childFolder: [],
+    childFolders: [],
     childFiles: [],
   });
+
   const { currentUser } = useAuth();
+
   useEffect(
     () =>
-      dispatch({ type: ACTIONS.SELECT_FOLDER, payload: { folderId, folder } }),
+      dispatch({
+        type: ACTIONS.SELECT_FOLDER,
+        payload: { folderId, folder },
+      }),
     [folder, folderId]
   );
 
   useEffect(() => {
     if (folderId == null) {
+      //is the root folder
       return dispatch({
         type: ACTIONS.UPDATE_FOLDER,
         payload: { folder: ROOT_FOLDER },
@@ -64,16 +70,17 @@ export function useFolder(folderId = null, folder = null) {
           payload: { folder: database.formattedDoc(doc) },
         });
       })
-      .catch(() =>
+      .catch((err) => {
+        console.warn(err);
         dispatch({
           type: ACTIONS.UPDATE_FOLDER,
           payload: { folder: ROOT_FOLDER },
-        })
-      );
+        });
+      });
   }, [folderId]);
 
   useEffect(() => {
-    database.folders
+    return database.folders
       .where("parentId", "==", folderId)
       .where("userId", "==", currentUser.uid)
       .orderBy("createdAt")
@@ -83,6 +90,6 @@ export function useFolder(folderId = null, folder = null) {
           payload: { childFolders: snapshot.docs.map(database.formattedDoc) },
         });
       });
-  }, [currentUser.uid, folderId]);
+  }, [currentUser, folderId]);
   return state;
 }
