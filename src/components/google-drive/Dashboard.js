@@ -18,7 +18,7 @@ export default function Dashboard() {
             {childFolders.map((childFolder) => (
               <div
                 key={childFolder.id}
-                style={{ maxWidth: "250px" }}
+                style={{ maxWidth: "200px" }}
                 className="p-2"
               >
                 <Folder folder={childFolder} />
