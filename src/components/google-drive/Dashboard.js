@@ -14,7 +14,7 @@ export default function Dashboard() {
 
       <Container fluid>
         <AddFolderButton currentFolder={folder} />
-        {childFolders.length > 0 && (
+        {childFolders?.length > 0 && (
           <div className="d-flex flex-wrap">
             {childFolders.map((childFolder, index) => (
               <div key={index} style={{ maxWidth: "250px" }} className="p2">
