@@ -13,7 +13,7 @@ export default function Dashboard() {
       <Navbar />
       <Container fluid>
         <AddFolderButton currentFolder={folder} />
-        {childFolders?.length > 0 && (
+        {childFolders.length > 0 && (
           <div className="d-flex flex-wrap">
             {childFolders.map((childFolder) => (
               <div
