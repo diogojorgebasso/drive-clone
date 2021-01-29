@@ -64,13 +64,13 @@ export default function AddFileButton({ currentFolder }) {
         uploadTask.snapshot.ref.getDownloadURL().then((url) => {
           database.files
             .where("name", "==", file.name)
-            .where("userId", "==", currentUser.id)
+            .where("userId", "==", currentUser.uid)
             .where("folderId", "==", currentFolder.id)
             .get()
             .then((existingFiles) => {
               const existingFile = existingFiles.docs[0];
               if (existingFile) {
-                existingFile.ref.update({ url });
+                existingFile.ref.update({ url: url });
               } else {
                 database.files.add({
                   url,
@@ -85,6 +85,7 @@ export default function AddFileButton({ currentFolder }) {
       }
     );
   }
+
   return (
     <>
       <label className="m-0 mr-2 btn btn-outline-success btn-sm">
