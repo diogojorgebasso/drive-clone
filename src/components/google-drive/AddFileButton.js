@@ -7,15 +7,18 @@ import { useAuth } from "../../contexts/AuthContext";
 import { ROOT_FOLDER } from "../../hooks/useFolder";
 import { v4 as uuidv4 } from "uuid";
 import { Toast, ProgressBar } from "react-bootstrap";
+
 export default function AddFileButton({ currentFolder }) {
   const [uploadingFiles, setUploadingFiles] = useState([]);
 
   const { currentUser } = useAuth();
 
   function handleUpload(e) {
-    const file = e.target.files[0];
-    if (currentFolder == null || file == null) return;
     const id = uuidv4();
+    const file = e.target.files[0];
+
+    if (currentFolder == null || file == null) return;
+
     setUploadingFiles((prevUploadFiles) => [
       ...prevUploadFiles,
       { id, name: file.name, progress: 0, error: false },
@@ -34,12 +37,16 @@ export default function AddFileButton({ currentFolder }) {
       (snapshot) => {
         const progress = snapshot.bytesTransferred / snapshot.totalBytes;
         setUploadingFiles((prevUploadFiles) => {
-          return prevUploadFiles.map((uploadFile) =>
-            uploadFile.id === id ? { ...uploadFile, progress } : uploadFile
-          );
+          return prevUploadFiles.map((uploadFile) => {
+            if (uploadFile.id === id) {
+              return { ...uploadFile, progress };
+            }
+            return uploadFile;
+          });
         });
       },
       (err) => {
+        console.warn(err);
         setUploadingFiles((prevUploadFiles) => {
           return prevUploadFiles.map((uploadFile) => {
             if (uploadFile.id === id) {
@@ -53,14 +60,27 @@ export default function AddFileButton({ currentFolder }) {
         setUploadingFiles((prevUploadFiles) =>
           prevUploadFiles.filter((uploadFile) => uploadFile.id !== id)
         );
+
         uploadTask.snapshot.ref.getDownloadURL().then((url) => {
-          database.files.add({
-            url,
-            name: file.name,
-            timeStamp: database.getTime(),
-            folderId: currentFolder.id,
-            userId: currentUser.uid,
-          });
+          database.files
+            .where("name", "==", file.name)
+            .where("userId", "==", currentUser.id)
+            .where("folderId", "==", currentFolder.id)
+            .get()
+            .then((existingFiles) => {
+              const existingFile = existingFiles.docs[0];
+              if (existingFile) {
+                existingFile.ref.update({ url });
+              } else {
+                database.files.add({
+                  url,
+                  name: file.name,
+                  timeStamp: database.getTime(),
+                  folderId: currentFolder.id,
+                  userId: currentUser.uid,
+                });
+              }
+            });
         });
       }
     );
