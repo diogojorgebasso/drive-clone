@@ -31,9 +31,28 @@ export default function AddFileButton({ currentFolder }) {
 
     uploadTask.on(
       "state_changed",
-      (snapshot) => {},
-      (err) => {},
+      (snapshot) => {
+        const progress = snapshot.bytesTransferred / snapshot.totalBytes;
+        setUploadingFiles((prevUploadFiles) => {
+          return prevUploadFiles.map((uploadFile) =>
+            uploadFile.id === id ? { ...uploadFile, progress } : uploadFile
+          );
+        });
+      },
+      (err) => {
+        setUploadingFiles((prevUploadFiles) => {
+          return prevUploadFiles.map((uploadFile) => {
+            if (uploadFile.id === id) {
+              return { ...uploadFile, error: true };
+            }
+            return uploadFile;
+          });
+        });
+      },
       () => {
+        setUploadingFiles((prevUploadFiles) =>
+          prevUploadFiles.filter((uploadFile) => uploadFile.id !== id)
+        );
         uploadTask.snapshot.ref.getDownloadURL().then((url) => {
           database.files.add({
             url,
@@ -67,8 +86,20 @@ export default function AddFileButton({ currentFolder }) {
             }}
           >
             {uploadingFiles.map((file) => (
-              <Toast key={file.id}>
-                <Toast.Header className="text-truncate w-100 d-block">
+              <Toast
+                key={file.id}
+                onClose={() =>
+                  setUploadingFiles((prevUploadFiles) => {
+                    return prevUploadFiles.filter((uploadFile) => {
+                      return uploadFile.id !== file.id;
+                    });
+                  })
+                }
+              >
+                <Toast.Header
+                  closeButton={file.error}
+                  className="text-truncate w-100 d-block"
+                >
                   {file.name}
                 </Toast.Header>
                 <Toast.Body>
