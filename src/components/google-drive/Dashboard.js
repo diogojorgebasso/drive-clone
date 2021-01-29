@@ -4,11 +4,11 @@ import AddFolderButton from "./AddFolderButton";
 import Navbar from "./navbar";
 import Folder from "./Folder";
 import File from "./File";
-
 import AddFileButton from "./AddFileButton";
 import { useFolder } from "../../hooks/useFolder";
 import { useParams, useLocation } from "react-router-dom";
 import FolderBreadcrumbs from "./FolderBreadcrumbs";
+
 export default function Dashboard() {
   const { folderId } = useParams();
   const { state = {} } = useLocation();
@@ -16,15 +16,15 @@ export default function Dashboard() {
     folderId,
     state.folder
   );
-  console.log(childFolders);
+
   return (
     <>
       <Navbar />
       <Container fluid>
         <div className="d-flex align-items-center">
           <FolderBreadcrumbs currentFolder={folder} />
-          <AddFolderButton currentFolder={folder} />
           <AddFileButton currentFolder={folder} />
+          <AddFolderButton currentFolder={folder} />
         </div>
         {childFolders.length > 0 && (
           <div className="d-flex flex-wrap">
@@ -39,7 +39,7 @@ export default function Dashboard() {
             ))}
           </div>
         )}
-        {childFolders > 0 && childFiles > 0 && <hr />}
+        {childFolders.length > 0 && childFiles.length > 0 && <hr />}
         {childFiles.length > 0 && (
           <div className="d-flex flex-wrap">
             {childFiles.map((childFile) => (
@@ -48,7 +48,7 @@ export default function Dashboard() {
                 style={{ maxWidth: "200px" }}
                 className="p-2"
               >
-                <File folder={childFile} />
+                <File file={childFile} />
               </div>
             ))}
           </div>
