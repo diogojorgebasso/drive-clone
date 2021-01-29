@@ -102,7 +102,7 @@ export function useFolder(folderId = null, folder = null) {
       .onSnapshot((snapshot) => {
         dispatch({
           type: ACTIONS.SET_CHILD_FILES,
-          payload: { childFolders: snapshot.docs.map(database.formattedDoc) },
+          payload: { childFiles: snapshot.docs.map(database.formattedDoc) },
         });
       });
   }, [currentUser, folderId]);
