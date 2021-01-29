@@ -106,5 +106,6 @@ export function useFolder(folderId = null, folder = null) {
         });
       });
   }, [currentUser, folderId]);
+
   return state;
 }
