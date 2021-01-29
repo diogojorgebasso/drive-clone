@@ -90,5 +90,17 @@ export function useFolder(folderId = null, folder = null) {
         });
       });
   }, [currentUser, folderId]);
+
+  useEffect(() => {
+    return database.folders //cleanup
+      .where("parentId", "==", folderId)
+      .where("userId", "==", currentUser.uid)
+      .onSnapshot((snapshot) => {
+        dispatch({
+          type: ACTIONS.SET_CHILD_FOLDERS,
+          payload: { childFolders: snapshot.docs.map(database.formattedDoc) },
+        });
+      });
+  }, [currentUser, folderId]);
   return state;
 }
